@@ -1,0 +1,77 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: 'AWS::Serverless-2016-10-31'
+Description: Define a Lambda Function and necessary dependencies. This function interacts with a Fargate task.
+
+Parameters:
+  S3Bucket:
+    Type: String
+  PackageName:
+    Type: String
+  VpcStackName:
+    Description: Name of the vpc stack
+    Type: String
+    Default: public-vpc-stack
+  FargateStackName:
+    Description: Name of the Fargate stack
+    Type: String
+    Default: fargate-fauna
+
+Resources:
+  RunFargateTaskFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: lambda_function.handler
+      Runtime: python3.7
+      CodeUri:
+        Bucket: !Ref S3Bucket
+        Key: !Ref PackageName
+      Role: !GetAtt RunFargateTaskFunctionRole.Arn
+      Environment:
+        Variables:
+          ECSCluster:
+            Fn::ImportValue:
+              Fn::Sub: "${FargateStackName}-FargateClusterArn"
+          ECSTaskArn:
+            Fn::ImportValue:
+              Fn::Sub: "${FargateStackName}-FargateTaskDefinition"
+          ECSSubnet:
+            Fn::ImportValue:
+              Fn::Sub: "${VpcStackName}-SubnetID"
+          ECSSecGroup:
+            Fn::ImportValue:
+              Fn::Sub: "${VpcStackName}-SecurityGroupID"
+
+  RunFargateTaskFunctionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Sid: 'Lambda'
+          Principal:
+            Service:
+            - lambda.amazonaws.com
+          Action:
+            - sts:AssumeRole
+      Policies:
+      - PolicyName: ECS
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:
+            - ecs:RunTask
+            Resource:
+            - Fn::ImportValue:
+                Fn::Sub: "${FargateStackName}-FargateTaskDefinition"
+      - PolicyName: IAM
+        PolicyDocument:
+          Statement:
+          - Effect: Allow
+            Action:
+            - iam:PassRole
+            Resource:
+            - Fn::ImportValue:
+                Fn::Sub: "${FargateStackName}-FargateExecutionRoleArn"
