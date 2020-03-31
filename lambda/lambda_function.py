@@ -27,6 +27,23 @@ def handler(event, context):
                 ],
                 'assignPublicIp': 'ENABLED'
             }
+        },
+        overrides={
+            'containerOverrides': [
+                {
+                    'name': 'data_from_lambda_to_fargate',
+                    'environment': [
+                        {
+                            'name': "LAMBDA_NAME",
+                            'value': context.function_name
+                        },
+                        {
+                            'name': "REQUEST_ID",
+                            'value': context.aws_request_id
+                        }
+                    ]
+                }
+            ]
         }
     )
 
