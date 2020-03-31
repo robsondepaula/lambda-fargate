@@ -10,7 +10,7 @@ Build the image defined on the Dockerfile
 docker build -t task_container .
 ```
 
-Get the log in to the registry (check *'cloudformation'* folder if you didn't created it yet).
+Log in to the registry (check *'cloudformation'* folder if you didn't created it yet)
 ```
 $(aws ecr get-login --no-include-email --region us-east-1)
 ```
@@ -29,6 +29,8 @@ Upload the docker image to the registry
 ```
 docker push <registry-uri-from-the-previous-command>:latest
 ```
+
+If following the steps for the first time, go to the *"lambda"* folder now.
 
 # Clean up
 To empty your repository, retrieve the image name:

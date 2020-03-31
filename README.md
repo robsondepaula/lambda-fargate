@@ -1,5 +1,12 @@
 This repository contains a proof-of-concept to verify a serverless architecture mixing Lambda and Fargate.
 
+# Architecture
+
+![lambda_fargate](https://user-images.githubusercontent.com/5849402/78027348-9a735f00-7333-11ea-8a76-614d78f281b6.png)
+
+
+# Description
+
 It is structured as follows:
 * **cloudformation**: set of cloudformation templates to create the infra-structure. It also conveniently allows one to remove all configured services when done.
 * **docker_with_task**: a Docker container to be run as an ECS Task in Fargate. 

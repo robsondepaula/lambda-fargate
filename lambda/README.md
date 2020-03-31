@@ -8,7 +8,7 @@ aws s3 mb s3://<bucket-name>
 
 # Package and deploy
 
-Once you have written what you need update the Python package with a virtual environment:
+Once you have written what you need on the Lambda function, update the Python package (with a virtual environment):
 
 1-Create a virtual environment:
 
