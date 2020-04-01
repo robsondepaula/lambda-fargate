@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: 'AWS::Serverless-2016-10-31'
-Description: Define a Lambda Function and necessary dependencies. This function interacts with a Fargate task.
+Description: Define a Lambda Function and necessary dependencies (depends on fargate-fauna stack). This function interacts with a Fargate task.
 
 Parameters:
   S3Bucket:
@@ -56,6 +56,7 @@ Resources:
             - lambda.amazonaws.com
           Action:
             - sts:AssumeRole
+      Path: /
       Policies:
       - PolicyName: ECS
         PolicyDocument:

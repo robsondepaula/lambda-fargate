@@ -19,32 +19,32 @@ python3 -m venv v-env
 2-Active the environment:
 
 ```
-~/lambda$ source v-env/bin/activate
+source v-env/bin/activate
 ```
 
 3-Install dependencies:
 
 ```
-~/lambda$ pip install -r requirements.txt
+pip install -r requirements.txt
 ```
 
 4-Deactivate the environment:
 
 ```
-~/lambda$ deactivate
+deactivate
 ```
 
 5-Create the zip package:
 
 ```
-~/lambda$ cd v-env/lib/python3.7/site-packages
-~/lambda/v-env/lib/python3.7/site-packages$ zip -r9 ${OLDPWD}/function.zip .
+cd v-env/lib/python3.7/site-packages
+zip -r9 ${OLDPWD}/function.zip .
 ```
 
 6-Add the lambda function to the zip package:
 ```
-~/lambda/v-env/lib/python3.7/site-packages$ cd $OLDPWD
-~/lambda$ zip -g function.zip lambda_function.py
+cd $OLDPWD
+zip -g function.zip lambda_function.py
 ```
 
 7-Upload the package to the S3 Bucket:

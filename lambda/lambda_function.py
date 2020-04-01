@@ -31,7 +31,7 @@ def handler(event, context):
         overrides={
             'containerOverrides': [
                 {
-                    'name': 'data_from_lambda_to_fargate',
+                    'name': 'fargate-container', # this is the container name found on the TaskDefinition (Cloudformation)
                     'environment': [
                         {
                             'name': "LAMBDA_NAME",

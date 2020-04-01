@@ -1,15 +1,1 @@
-boto3==1.11.12
-botocore==1.14.12
-docutils==0.15.2
-jmespath==0.9.4
-joblib==0.14.1
-nltk==3.4.5
-pyspark==2.4.0
-python-crfsuite==0.9.6
-python-dateutil==2.8.1
-s3transfer==0.3.3
-six==1.14.0
-sklearn-crfsuite==0.3.6
-tabulate==0.8.6
-tqdm==4.42.1
-urllib3==1.25.8
+boto3==1.10.5

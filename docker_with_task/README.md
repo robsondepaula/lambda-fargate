@@ -33,12 +33,12 @@ docker push <registry-uri-from-the-previous-command>:latest
 If following the steps for the first time, go to the *"lambda"* folder now.
 
 # Clean up
-To empty your repository, retrieve the image name:
+The repositoryName can be found by the following command line:
 ```
-aws ecr list-images --repository-name <repository-name>
+aws ecr describe-repositories
 ```
 
-And then delete the image:
+To empty your repository issue the command below:
 ```
 aws ecr batch-delete-image --repository-name <repository-name> --image-ids imageTag=latest
 ```

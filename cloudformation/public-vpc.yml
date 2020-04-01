@@ -20,6 +20,7 @@ Resources:
     Type: "AWS::EC2::VPC"
     Properties:
       CidrBlock: 10.10.10.0/24
+      EnableDnsSupport: true
       Tags:
         - Key: Name
           Value: !Sub ${AWS::StackName}
