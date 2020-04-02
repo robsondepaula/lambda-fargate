@@ -1,7 +1,7 @@
 # Intro
 This folder contains a 'Dockerfile' to create a task on Fargate.
 
-The 'task.py' is used as proof-of-concept to check XGBoost can be run on a serverless maner.
+The 'task.py' is used as proof-of-concept to check Lambda could interact with Fargate, successfully mixing the two serverless compute option on AWS.
 
 # Setup
 
@@ -33,12 +33,12 @@ docker push <registry-uri-from-the-previous-command>:latest
 If following the steps for the first time, go to the *"lambda"* folder now.
 
 # Clean up
-To empty your repository, retrieve the image name:
+The repositoryName can be found by the following command line:
 ```
-aws ecr list-images --repository-name <repository-name>
+aws ecr describe-repositories
 ```
 
-And then delete the image:
+To empty your repository issue the command below:
 ```
 aws ecr batch-delete-image --repository-name <repository-name> --image-ids imageTag=latest
 ```

@@ -27,6 +27,23 @@ def handler(event, context):
                 ],
                 'assignPublicIp': 'ENABLED'
             }
+        },
+        overrides={
+            'containerOverrides': [
+                {
+                    'name': 'fargate-container', # this is the container name found on the TaskDefinition (Cloudformation)
+                    'environment': [
+                        {
+                            'name': "LAMBDA_NAME",
+                            'value': context.function_name
+                        },
+                        {
+                            'name': "REQUEST_ID",
+                            'value': context.aws_request_id
+                        }
+                    ]
+                }
+            ]
         }
     )
 

@@ -11,20 +11,31 @@ Use the template to create the VPC:
 aws cloudformation deploy --stack-name public-vpc-stack --template-file public-vpc.yml
 ```
 
+## ECR
+Validate that the ECR template is correct:
+```
+aws cloudformation validate-template --template-body file://ecr-repo.yml
+```
+
+Use the template to create an ECR to hold docker images
+```
+aws cloudformation deploy --stack-name ecr-repo --template-file ecr-repo.yml
+```
+
+After this step go to the folder *"docker_with_task"* and follow its instructions in order to push a docker image to the newly created ECR. It will be used to run the task on Fargate.
+
 ## Fargate
 Validate that the Fargate template is correct:
 ```
 aws cloudformation validate-template --template-body file://fargate-fauna.yml
 ```
 
-Use the template to create an ECR to hold docker images, ECS Cluster, Fargate Task Definition, Execution Roles, etc.
+Use the template to create an ECS Cluster, Fargate Task Definition, Execution Roles, etc.
 ```
 aws cloudformation deploy --stack-name fargate-fauna --template-file fargate-fauna.yml --capabilities CAPABILITY_NAMED_IAM
 ```
 
-After this step go to the folder *"docker_with_task"* and follow its instructions in order to push a docker image to the newly created ECR. It will be used to run the task on Fargate.
-
-From there you'll have to go to the folder *"lambda"*, come back when finished.
+After this step go to the folder *"lambda"*, come back when finished.
 
 ## Lambda
 
@@ -54,6 +65,7 @@ First execute the commands from the *Clean-up* section in the *"lambda"* folder.
 When done, proceed to the final clean-up:
 ```
 aws cloudformation delete-stack --stack-name lambda-stack
+aws cloudformation delete-stack --stack-name ecr-repo
 aws cloudformation delete-stack --stack-name fargate-fauna
 aws cloudformation delete-stack --stack-name public-vpc-stack
 ```
