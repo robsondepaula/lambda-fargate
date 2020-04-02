@@ -1,5 +1,11 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Define what is needed for Fargate.
+Description: Define an ECS Cluster, a Fargate Task and its execution role and a Cloudwatch log group.
+
+Parameters:
+  EcrStackName:
+    Description: Name of the ECR stack
+    Type: String
+    Default: ecr-repo
 
 Outputs:
   FargateECSClusterArn: 
@@ -19,23 +25,21 @@ Outputs:
         Fn::Sub: "${AWS::StackName}-FargateExecutionRoleArn"
 
 Resources:
-  FargateECSRepo:
-    Type: "AWS::ECR::Repository"
 
   Cluster:
     Type: AWS::ECS::Cluster
     Properties:
       ClusterName: fargate-cluster
 
-  LogGroup:
+  FargateLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: /ecs/ecs-tasks-fargate
       RetentionInDays: 1
 
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
+      Family: FargateFaunaFamily
       NetworkMode: awsvpc
       RequiresCompatibilities:
         - FARGATE
@@ -44,12 +48,15 @@ Resources:
       ExecutionRoleArn: !Ref ExecutionRole
       ContainerDefinitions:
         - Name: fargate-container
-          Image: !Sub ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${FargateECSRepo}:latest
+          Image: !Sub
+            - ${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/${RepoName}:latest
+            - RepoName:
+                Fn::ImportValue: !Sub ${EcrStackName}-EcrRepo
           LogConfiguration:
             LogDriver: awslogs
             Options:
-              awslogs-group: /ecs/ecs-tasks-fargate
-              awslogs-region: !Ref AWS::Region
+              awslogs-group: !Ref FargateLogGroup
+              awslogs-region: !Sub ${AWS::Region}
               awslogs-stream-prefix: ecs
 
   ExecutionRole:

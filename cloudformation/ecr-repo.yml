@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Define an ECR repository where docker images are going to be stored for later retrieval from Fargate.
+
+Outputs:
+  EcrRepo: 
+    Value: !Ref FargateECSRepo
+    Export:
+      Name:
+        Fn::Sub: "${AWS::StackName}-EcrRepo"
+
+Resources:
+  FargateECSRepo:
+    Type: "AWS::ECR::Repository"

@@ -1,7 +1,7 @@
 # Intro
 This folder contains a 'Dockerfile' to create a task on Fargate.
 
-The 'task.py' is used as proof-of-concept to check XGBoost can be run on a serverless maner.
+The 'task.py' is used as proof-of-concept to check Lambda could interact with Fargate, successfully mixing the two serverless compute option on AWS.
 
 # Setup
 

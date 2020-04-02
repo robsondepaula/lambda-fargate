@@ -19,25 +19,36 @@ Resources:
   FargateVPC:
     Type: "AWS::EC2::VPC"
     Properties:
-      CidrBlock: 10.10.10.0/24
+      CidrBlock: 10.0.0.0/16
       EnableDnsSupport: true
+      EnableDnsHostnames: true
       Tags:
         - Key: Name
           Value: !Sub ${AWS::StackName}
+
   FargateSubnet:
     Type: "AWS::EC2::Subnet"
     Properties:
-      CidrBlock : 10.10.10.0/24
+      CidrBlock : 10.0.0.0/24
       VpcId: !Ref FargateVPC
+      MapPublicIpOnLaunch: true
       Tags:
         - Key: Name
           Value: !Sub ${AWS::StackName}
+
   FargateIGW:
     Type: "AWS::EC2::InternetGateway"
     Properties:
       Tags:
         - Key: Name
           Value: !Sub ${AWS::StackName}
+
+  FargateAttachGateway:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId: !Ref FargateVPC
+      InternetGatewayId: !Ref FargateIGW
+
   FargateRouteTable:
     Type: "AWS::EC2::RouteTable"
     Properties:
@@ -45,18 +56,21 @@ Resources:
       Tags:
         - Key: Name
           Value: !Sub ${AWS::StackName}
+
   FargateRoute:
     Type: "AWS::EC2::Route"
-    DependsOn: FargateIGW
+    DependsOn: FargateAttachGateway
     Properties:
       RouteTableId: !Ref FargateRouteTable
       DestinationCidrBlock: 0.0.0.0/0
       GatewayId: !Ref FargateIGW
-  FargateAttachGateway:
-    Type: AWS::EC2::VPCGatewayAttachment
+
+  FargateRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
-      VpcId: !Ref FargateVPC
-      InternetGatewayId: !Ref FargateIGW
+      SubnetId: !Ref FargateSubnet
+      RouteTableId: !Ref FargateRouteTable
+
   FargateSG:
     Type: "AWS::EC2::SecurityGroup"
     Properties:
